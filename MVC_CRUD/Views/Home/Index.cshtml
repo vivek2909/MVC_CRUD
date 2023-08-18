@@ -5,6 +5,7 @@
 }
 
 <h2>Index</h2>
+@Html.Raw(TempData["Message"])
 
 <p>
     @Html.ActionLink("Create New", "Create","Create", new { @class = "btn btn-primary" })

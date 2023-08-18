@@ -25,8 +25,12 @@ namespace MVC_CRUD.Controllers
         public ActionResult Create(Student model)
         {
             _Context.Students.Add(model);
-            _Context.SaveChanges();
-            ViewBag.Message = "Data Inserted Successfully";
+           int a = _Context.SaveChanges();
+            if (a > 0)
+            {
+                TempData["Message"] = "<script>alert('Record Create Successfully')</script>";
+                return RedirectToAction("Index");
+            }
             return View();
         }
         [HttpGet]
