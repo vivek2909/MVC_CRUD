@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Data.Entity;
 
 namespace MVC_CRUD.Controllers
 {
@@ -49,9 +50,10 @@ namespace MVC_CRUD.Controllers
                 data.StudentName = std.StudentName;
                 data.StudentFees = std.StudentFees;
                 _Context.SaveChanges();
+                TempData["Message"] = "<script>alert('Record Edit Successfully')</script>";
             }
 
-            return RedirectToAction("index");
+            return RedirectToAction("Index");
         }
 
         public ActionResult Details(int id)
@@ -63,10 +65,26 @@ namespace MVC_CRUD.Controllers
         public ActionResult Delete(int id)
         {
             var data = _Context.Students.Where(x => x.StudentId == id).FirstOrDefault();
-            _Context.Students.Remove(data);
-            _Context.SaveChanges();
-            ViewBag.Message = "Record Delete Successfully";
-            return RedirectToAction("Index");
+            return View(data);
         }
+
+        [HttpPost]
+        public ActionResult DeleteConfirmed(int id)
+        { 
+            var student = _Context.Students.Find(id); 
+            if (student != null) 
+            { 
+                var entry = _Context.Entry(student);
+                if (entry.State == EntityState.Detached)
+                {
+                    _Context.Students.Attach(student);
+                } 
+                _Context.Students.Remove(student);
+                _Context.SaveChanges(); 
+                TempData["Message"] = "<script>alert('Record Delete Successfully')</script>";
+            } 
+            return RedirectToAction("Index"); 
+        }
+
     }
 }
